@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mockup Hero Nuevo Layout</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { 
+  font-family: 'Segoe UI', system-ui, sans-serif; 
+  background: #0A0E1A; 
+  color: #fff;
+  min-height: 100vh;
+  padding: 40px;
+}
+
+.hero {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: start;
+}
+
+/* === COLUMNA IZQUIERDA === */
+.left-col {
+  /* Foto junto al nombre */
+}
+
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+.small-photo {
+  width: 90px;
+  height: 90px;
+  border-radius: 50%;
+  border: 3px solid #00D4FF;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.name-titles h1 {
+  font-size: 42px;
+  font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -1px;
+}
+
+.name-titles h1 span {
+  background: linear-gradient(135deg, #00D4FF, #6C63FF);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 14px;
+  border-radius: 99px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  background: rgba(0,212,255,0.1);
+  color: #00D4FF;
+  border: 1px solid rgba(0,212,255,0.2);
+  margin-bottom: 16px;
+}
+
+.presentation-text {
+  font-size: 17px;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.65);
+  margin-bottom: 28px;
+  max-width: 480px;
+}
+
+.ctas {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.btn-primary {
+  padding: 12px 24px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(135deg, #00D4FF, #6C63FF);
+  color: #fff;
+}
+
+.btn-outline {
+  padding: 11px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 14px;
+  background: transparent;
+  cursor: pointer;
+  border: 1.5px solid rgba(255,255,255,0.25);
+  color: rgba(255,255,255,0.85);
+}
+
+/* === COLUMNA DERECHA: VIDEO === */
+.right-col {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.video-container {
+  width: 100%;
+  max-width: 420px;
+  aspect-ratio: 9/16;
+  background: rgba(255,255,255,0.05);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.video-placeholder {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: rgba(0,212,255,0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+}
+
+.video-label {
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+}
+
+.video-note {
+  font-size: 11px;
+  color: rgba(255,255,255,0.3);
+  margin-top: 8px;
+}
+
+/* === ETIQUETAS VISUALES === */
+.labels {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  font-size: 11px;
+  color: rgba(0,212,255,0.7);
+  font-weight: 600;
+}
+
+.label-box {
+  border: 1px dashed rgba(0,212,255,0.4);
+  padding: 2px 8px;
+  border-radius: 4px;
+}
+
+/* Responsive */
+@media (max-width: 800px) {
+  .hero {
+    grid-template-columns: 1fr;
+  }
+  .right-col {
+    order: -1;
+  }
+  .video-container {
+    max-width: 280px;
+    aspect-ratio: 16/9;
+  }
+}
+</style>
+</head>
+<body>
+
+<div class="labels">
+  <span class="label-box">MOCKUP — NUEVO LAYOUT</span>
+  <span class="label-box">Foto chica junto a nombre + texto</span>
+  <span class="label-box">Video en la derecha (donde estaba foto)</span>
+</div>
+
+<div class="hero">
+  
+  <!-- IZQUIERDA: Foto + Nombre + Texto -->
+  <div class="left-col">
+    <div class="badge">📍 Lima, Perú · Disponible para proyectos</div>
+    
+    <div class="name-row">
+      <img src="assets/manuel-photo.jpg" class="small-photo" alt="Manuel" onerror="this.style.display='none'">
+      <div class="name-titles">
+        <h1>Manuel Argüelles Guerra<br><span>Analytics & AI Engineer</span></h1>
+      </div>
+    </div>
+    
+    <p class="presentation-text">
+      Transformo datos en decisiones. Construyo pipelines, modelos predictivos y 
+      agentes de IA que generan impacto real en empresas. 13+ años en Data Engineering 
+      y Analytics, líder técnico en plataformas Databricks y Azure.
+    </p>
+    
+    <div class="ctas">
+      <button class="btn-primary">Ver proyectos</button>
+      <button class="btn-outline">Descargar CV</button>
+    </div>
+  </div>
+  
+  <!-- DERECHA: Video -->
+  <div class="right-col">
+    <div class="video-container">
+      <div class="video-placeholder">▶️</div>
+      <span class="video-label">Video</span>
+      <span class="video-note">(Reemplazar con &lt;video&gt;)</span>
+    </div>
+  </div>
+  
+</div>
+
+</body>
+</html>

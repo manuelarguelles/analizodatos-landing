@@ -256,58 +256,104 @@
       transform: translateY(-2px);
     }
 
-    /* photo side */
-    .hero-photo-wrap {
+    /* name row: photo + name side by side */
+    .hero-name-row {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 1.2rem;
+    }
+    .hero-avatar {
+      width: 90px;
+      height: 90px;
+      border-radius: 50%;
+      border: 3px solid var(--primary);
+      object-fit: cover;
+      flex-shrink: 0;
+      box-shadow: 0 0 20px rgba(0,212,255,0.3);
+    }
+
+    /* video side */
+    .hero-video-wrap {
       display: flex;
       justify-content: center;
       align-items: center;
       position: relative;
       z-index: 1;
     }
-
-    .photo-ring {
+    .video-container {
       position: relative;
-      width: clamp(240px, 30vw, 360px);
-      height: clamp(240px, 30vw, 360px);
-    }
-
-    /* animated gradient ring */
-    .photo-ring::before {
-      content: '';
-      position: absolute;
-      inset: -4px;
-      border-radius: 50%;
-      background: conic-gradient(
-        from 0deg,
-        var(--primary),
-        var(--secondary),
-        #ff6b6b,
-        var(--primary)
-      );
-      animation: spin 4s linear infinite;
-      z-index: 0;
-    }
-    .photo-ring::after {
-      content: '';
-      position: absolute;
-      inset: -1px;
-      border-radius: 50%;
-      background: var(--bg);
-      z-index: 1;
-    }
-
-    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-
-    .photo-ring img {
-      position: relative;
-      z-index: 2;
       width: 100%;
-      height: 100%;
-      object-fit: cover;
-      border-radius: 50%;
+      max-width: clamp(240px, 28vw, 380px);
+    }
+    .video-container video {
+      width: 100%;
+      border-radius: 16px;
+      border: 1px solid rgba(255,255,255,0.1);
+      box-shadow: 0 0 40px rgba(0,212,255,0.15);
       display: block;
     }
+    .sound-wrap {
+      position: absolute;
+      bottom: 14px;
+      right: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 8px;
+      z-index: 10;
+    }
+    /* barra de volumen — oculta por default */
+    .volume-slider-wrap {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: rgba(10,14,26,0.85);
+      border: 1px solid rgba(255,255,255,0.15);
+      backdrop-filter: blur(10px);
+      border-radius: 20px;
+      padding: 10px 6px;
+      opacity: 0;
+      pointer-events: none;
+      transform: translateY(6px);
+      transition: opacity 0.2s, transform 0.2s;
+    }
+    .sound-wrap:hover .volume-slider-wrap {
+      opacity: 1;
+      pointer-events: all;
+      transform: translateY(0);
+    }
+    /* input range vertical */
+    .volume-range {
+      -webkit-appearance: slider-vertical;
+      appearance: slider-vertical;
+      width: 4px;
+      height: 80px;
+      accent-color: #00D4FF;
+      cursor: pointer;
+      writing-mode: vertical-lr;
+      direction: rtl;
+    }
+    .sound-btn {
+      background: rgba(10,14,26,0.75);
+      border: 1px solid rgba(255,255,255,0.2);
+      backdrop-filter: blur(8px);
+      border-radius: 50%;
+      width: 42px;
+      height: 42px;
+      font-size: 18px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .sound-btn:hover {
+      background: rgba(0,212,255,0.2);
+      transform: scale(1.1);
+    }
 
+    /* keep old photo-placeholder just in case */
     .photo-ring .photo-placeholder {
       position: relative;
       z-index: 2;
@@ -699,10 +745,11 @@
         padding-top: 100px;
       }
       .hero-badge { margin: 0 auto 1.4rem; }
-      .hero-sub { margin: 0 auto 2.2rem; }
+      .hero-name-row { justify-content: center; }
+      .hero-sub { margin: 0 auto 2.2rem; text-align: center; }
       .hero-ctas { justify-content: center; }
-      .hero-photo-wrap { order: -1; }
-      .photo-ring { width: 220px; height: 220px; }
+      .hero-video-wrap { order: -1; }
+      .hero-video-wrap video { max-width: 280px; }
 
       .about-grid { grid-template-columns: 1fr; gap: 2.5rem; }
       .contact-grid { grid-template-columns: 1fr; gap: 2.5rem; }
@@ -734,7 +781,7 @@
 
 <!-- ───────────── NAV ───────────── -->
 <nav id="navbar">
-  <a href="#hero" class="nav-logo">analiza<span>datos</span>.com</a>
+  <a href="#hero" class="nav-logo">analizo<span>datos</span>.com</a>
   <ul class="nav-links">
     <li><a href="#about">Sobre mí</a></li>
     <li><a href="#skills">Skills</a></li>
@@ -761,10 +808,15 @@
 <section id="hero">
   <div class="hero-content">
     <div class="hero-badge">Lima, Perú</div>
-    <h1 class="hero-title">
-      Manuel Argüelles Guerra<br />
-      <span class="gradient">Analytics &amp; AI&nbsp;Engineer</span>
-    </h1>
+
+    <div class="hero-name-row">
+      <img src="assets/manuel-photo.jpg" class="hero-avatar" alt="Manuel Argüelles Guerra" />
+      <h1 class="hero-title">
+        Manuel Argüelles Guerra<br />
+        <span class="gradient">Analytics &amp; AI&nbsp;Engineer</span>
+      </h1>
+    </div>
+
     <p class="hero-sub">
       Construyo pipelines de datos, agentes IA autónomos y arquitecturas cloud que convierten datos complejos en decisiones inteligentes.
     </p>
@@ -780,10 +832,17 @@
     </div>
   </div>
 
-  <div class="hero-photo-wrap">
-    <div class="photo-ring">
-      <img src="assets/manuel-photo.jpg" alt="Manuel Argüelles Guerra" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-      <div class="photo-placeholder" style="display:none;">👨‍💻</div>
+  <div class="hero-video-wrap">
+    <div class="video-container">
+      <video id="heroVideo" autoplay muted loop playsinline>
+        <source src="assets/demo-video.mp4" type="video/mp4" />
+      </video>
+      <div class="sound-wrap">
+        <div class="volume-slider-wrap" id="volumeSliderWrap">
+          <input type="range" class="volume-range" id="volumeRange" min="0" max="1" step="0.05" value="0" oninput="setVolume(this.value)" />
+        </div>
+        <button class="sound-btn" id="soundBtn" onclick="handleSoundBtn()" title="Activar sonido">🔇</button>
+      </div>
     </div>
   </div>
 </section>
@@ -1236,7 +1295,7 @@
 
 <!-- ───────────── FOOTER ───────────── -->
 <footer>
-  <div class="footer-brand">analiza<span>datos</span>.com</div>
+  <div class="footer-brand">analizo<span>datos</span>.com</div>
   <div class="footer-copy">© 2025 Manuel Argüelles Guerra — Lima, Perú</div>
   <div class="footer-links">
     <a href="mailto:marguelles@analizodatos.com">Email</a>
@@ -1291,5 +1350,120 @@
     el.style.transitionDelay = `${(i % 3) * 80}ms`;
   });
 </script>
+  <!-- ── WhatsApp Floating Button ── -->
+  <style>
+    .wa-float {
+      position: fixed;
+      bottom: 28px;
+      right: 28px;
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .wa-float .wa-label {
+      background: #fff;
+      color: #128C7E;
+      font-size: 13px;
+      font-weight: 600;
+      padding: 7px 14px;
+      border-radius: 20px;
+      box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+      white-space: nowrap;
+      opacity: 0;
+      transform: translateX(10px);
+      transition: opacity 0.25s, transform 0.25s;
+      pointer-events: none;
+    }
+    .wa-float:hover .wa-label {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .wa-btn {
+      width: 58px;
+      height: 58px;
+      border-radius: 50%;
+      background: #25D366;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 6px 24px rgba(37,211,102,0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
+      flex-shrink: 0;
+    }
+    .wa-float:hover .wa-btn {
+      transform: scale(1.1);
+      box-shadow: 0 8px 32px rgba(37,211,102,0.6);
+    }
+    .wa-btn svg { width: 30px; height: 30px; fill: #fff; }
+  </style>
+
+  <a class="wa-float"
+     href="https://wa.me/51951485057?text=Hola%20Manuel%20%F0%9F%91%8B%2C%20vengo%20de%20tu%20web%20analizodatos.com.%20Me%20interesa%20conversar%20contigo%20sobre%20un%20proyecto%20de%20datos%20o%20IA.%20Mi%20nombre%20es%20"
+     target="_blank" rel="noopener">
+    <span class="wa-label">¡Escríbeme por WhatsApp!</span>
+    <div class="wa-btn">
+      <svg viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+        <path d="M16 .5C7.44.5.5 7.44.5 16c0 2.83.74 5.48 2.03 7.79L.5 31.5l8-2a15.43 15.43 0 0 0 7.5 1.94C24.56 31.44 31.5 24.5 31.5 16S24.56.5 16 .5zm0 28.1a13.5 13.5 0 0 1-6.9-1.89l-.49-.3-5.1 1.34 1.36-4.97-.32-.51A13.5 13.5 0 1 1 16 28.6zm7.4-10.1c-.4-.2-2.38-1.17-2.75-1.3-.37-.14-.63-.2-.9.2s-1.03 1.3-1.26 1.57c-.23.27-.46.3-.86.1-.4-.2-1.7-.63-3.23-2-1.2-1.07-2-2.38-2.24-2.78-.23-.4-.02-.62.18-.82.18-.18.4-.46.6-.7.2-.23.27-.4.4-.66.14-.27.07-.5-.03-.7s-.9-2.16-1.23-2.96c-.32-.78-.65-.67-.9-.68h-.76c-.27 0-.7.1-1.06.5s-1.4 1.37-1.4 3.33 1.43 3.87 1.63 4.13c.2.27 2.82 4.3 6.83 6.03.95.41 1.7.66 2.28.84.96.3 1.83.26 2.52.16.77-.12 2.38-.97 2.72-1.9.33-.93.33-1.73.23-1.9-.1-.17-.37-.27-.77-.47z"/>
+      </svg>
+    </div>
+  </a>
+
+  <script>
+    const video  = document.getElementById('heroVideo');
+    const btn    = document.getElementById('soundBtn');
+    const slider = document.getElementById('volumeRange');
+
+    // Estado
+    let audioActive = false;
+
+    // Escenario A: loop silenciado por default (ya está en el <video>)
+
+    function handleSoundBtn() {
+      if (!audioActive) {
+        // Escenario B: activar audio por primera vez (o reiniciar con 🔄)
+        audioActive = true;
+        video.loop = false;
+        video.muted = false;
+        video.currentTime = 0;
+        const vol = parseFloat(slider.value) > 0 ? parseFloat(slider.value) : 0.8;
+        video.volume = vol;
+        slider.value = vol;
+        video.play();
+        btn.textContent = '🔊';
+        btn.title = 'Silenciar';
+      } else {
+        // Escenario D: silenciar durante reproducción → volver a loop
+        audioActive = false;
+        video.muted = true;
+        video.loop = true;
+        btn.textContent = '🔇';
+        btn.title = 'Activar sonido';
+      }
+    }
+
+    // Escenario C: al terminar el video con audio → mostrar botón 🔄
+    video.addEventListener('ended', function() {
+      if (audioActive) {
+        btn.textContent = '🔄';
+        btn.title = 'Volver a ver';
+        audioActive = false; // siguiente clic en handleSoundBtn reinicia
+      }
+    });
+
+    function setVolume(val) {
+      video.volume = parseFloat(val);
+      if (parseFloat(val) === 0) {
+        video.muted = true;
+        btn.textContent = '🔇';
+        audioActive = false;
+      } else if (!video.muted) {
+        video.muted = false;
+        btn.textContent = '🔊';
+      }
+    }
+  </script>
 </body>
 </html>
