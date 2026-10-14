@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Agenda una llamada · analizodatos.com</title>
+<meta name="description" content="Reserva 30 minutos con Manuel Argüelles: datos, automatización y agentes de IA.">
+<meta name="robots" content="noindex">
+<script src="/assets/gemelo/config.js"></script>
+<style>
+:root{--bg:#02030a;--fg:#eaf0ff;--muted:#9aa6c6;--accent:#7b6cff;--accent3:#37e0c8;--card:rgba(255,255,255,.05);--line:rgba(255,255,255,.12)}
+@media (prefers-color-scheme:light){:root{--bg:#eef1fb;--fg:#161a2b;--muted:#5b647e;--accent:#5b4bff;--accent3:#0a766a;--card:#fff;--line:rgba(20,24,50,.14)}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.55 Inter,system-ui,sans-serif}
+main{max-width:720px;margin:0 auto;padding:28px 16px 80px}a{color:var(--accent3)}
+h1{font:700 clamp(26px,5vw,38px)/1.15 "Space Grotesk",Inter,sans-serif;margin:.3em 0 .2em}.lead{color:var(--muted);margin:0 0 22px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin:0 0 16px}.card h2{font-size:17px;margin:0 0 12px}
+label{display:block;font-size:13px;color:var(--muted);margin:12px 0 4px}select,input,textarea{width:100%;font:inherit;color:var(--fg);background:transparent;border:1px solid var(--line);border-radius:10px;padding:10px 12px}
+select option{color:#161a2b}textarea{min-height:84px;resize:vertical}
+.days{display:grid;gap:12px}.day b{display:block;margin-bottom:6px}.day b::first-letter{text-transform:uppercase}.slots{display:flex;flex-wrap:wrap;gap:8px}
+.slot{border:1px solid var(--line);background:transparent;color:var(--fg);border-radius:999px;padding:8px 14px;font:600 14px inherit;cursor:pointer}.slot[aria-pressed=true]{background:var(--accent);border-color:var(--accent);color:#fff}
+button.go{margin-top:16px;border:0;border-radius:12px;padding:13px 22px;font:700 15px inherit;color:#fff;background:linear-gradient(135deg,#7b6cff,#ff5e8a);cursor:pointer}button.go[disabled]{opacity:.45;cursor:not-allowed}
+.chk{display:flex;gap:10px;align-items:flex-start;margin-top:12px;font-size:14px;color:var(--muted)}.chk input{width:auto;margin-top:4px}
+.msg{padding:12px 14px;border-radius:12px;margin-top:12px}.err{background:rgba(255,94,138,.14);border:1px solid rgba(255,94,138,.4)}.ok{background:rgba(55,224,200,.12);border:1px solid rgba(55,224,200,.4)}
+:focus-visible{outline:2px solid var(--accent3);outline-offset:2px}.hide{display:none}
+</style>
+</head>
+<body><main>
+<p><a href="/">← analizodatos.com</a></p>
+<h1>Agenda 30 minutos con Manuel</h1>
+<p class="lead">Una llamada por Google Meet para entender tu caso y decirte con honestidad si puedo ayudarte. Hora de Lima (GMT-5), lunes a viernes. Sin costo ni compromiso.</p>
+
+<section class="card" id="s1"><h2>1 · Cuéntame un poco (opcional, ayuda a preparar la llamada)</h2>
+<label for="tema">¿Sobre qué quieres hablar?</label>
+<select id="tema"><option>Agente de IA para mi negocio</option><option>Datos / migración a la nube (Databricks, Fabric)</option><option>Dashboards y analítica</option><option>Capacitación para mi equipo</option><option>Una oportunidad laboral</option><option>Otro tema</option></select>
+<label for="tam">¿Tamaño de tu organización?</label>
+<select id="tam"><option>Soy independiente</option><option>2–20 personas</option><option>21–200 personas</option><option>Más de 200</option></select>
+<label for="plazo">¿Para cuándo lo necesitas?</label>
+<select id="plazo"><option>Solo estoy explorando</option><option>En 1–3 meses</option><option>Este mes</option></select>
+<label for="nota">Algo más que deba saber</label><textarea id="nota" maxlength="300" placeholder="Una o dos líneas…"></textarea></section>
+
+<section class="card"><h2>2 · Elige un horario</h2><div id="days" class="days" aria-live="polite">Cargando horarios reales…</div></section>
+
+<section class="card"><h2>3 · Tus datos</h2>
+<label for="nombre">Nombre</label><input id="nombre" autocomplete="name" maxlength="120">
+<label for="correo">Correo (te llega la invitación con el enlace de Meet)</label><input id="correo" type="email" autocomplete="email" maxlength="254">
+<label class="chk"><input id="consent" type="checkbox"><span>Acepto que Manuel me contacte por este correo para esta reunión. Guardamos tu nombre y correo solo para esto.</span></label>
+<div id="ts" style="margin-top:14px"></div>
+<button class="go" id="go" disabled>Confirmar reunión</button><div id="out" aria-live="polite"></div></section>
+</main>
+<script>
+(function(){
+var C=window.GEMELO_CONFIG, chosen=null, tsToken=null, q=new URLSearchParams(location.search);
+var ctx=q.get('ctx'); if(ctx) document.getElementById('nota').value=('Conversación con el gemelo: '+ctx).slice(0,300);
+var tz='America/Lima';
+function dayKey(s){return new Date(s).toLocaleDateString('es-PE',{timeZone:tz,weekday:'long',day:'numeric',month:'long'}).toLowerCase()}
+function hour(s){return new Date(s).toLocaleTimeString('es-PE',{timeZone:tz,hour:'2-digit',minute:'2-digit',hour12:false})}
+function check(){document.getElementById('go').disabled=!(chosen&&tsToken&&document.getElementById('nombre').value.trim().length>1&&/.+@.+\..+/.test(document.getElementById('correo').value)&&document.getElementById('consent').checked)}
+['nombre','correo','consent'].forEach(function(id){document.getElementById(id).addEventListener('input',check)});
+fetch(C.api+'/api/availability').then(function(r){return r.json()}).then(function(j){
+  var box=document.getElementById('days'); if(!j.slots||!j.slots.length){box.textContent='No hay horarios libres en los próximos días. Escríbeme a manuel.arguelles.peru@gmail.com.';return}
+  var groups={}; j.slots.forEach(function(s){(groups[dayKey(s.start)]=groups[dayKey(s.start)]||[]).push(s)}); box.textContent='';
+  Object.keys(groups).slice(0,10).forEach(function(k){var d=document.createElement('div');d.className='day';d.innerHTML='<b></b><div class="slots"></div>';d.querySelector('b').textContent=k;
+    groups[k].forEach(function(s){var b=document.createElement('button');b.type='button';b.className='slot';b.setAttribute('aria-pressed','false');b.textContent=hour(s.start);b.onclick=function(){document.querySelectorAll('.slot').forEach(function(x){x.setAttribute('aria-pressed','false')});b.setAttribute('aria-pressed','true');chosen=s.start;check()};d.querySelector('.slots').appendChild(b)});box.appendChild(d)});
+}).catch(function(){document.getElementById('days').textContent='No pude cargar los horarios. Intenta de nuevo o escribe a manuel.arguelles.peru@gmail.com.'});
+var sc=document.createElement('script');sc.src='https://challenges.cloudflare.com/turnstile/v0/api.js?render=explicit';sc.async=true;sc.onload=function(){window.turnstile.render('#ts',{sitekey:C.turnstileSiteKey,callback:function(t){tsToken=t;check()},'expired-callback':function(){tsToken=null;check()}})};document.head.appendChild(sc);
+document.getElementById('go').onclick=function(){
+  var out=document.getElementById('out'),btn=this;btn.disabled=true;out.className='';out.textContent='Reservando…';
+  var intent=[document.getElementById('tema').value,document.getElementById('tam').value,document.getElementById('plazo').value,document.getElementById('nota').value].filter(Boolean).join(' | ');
+  fetch(C.api+'/api/bookings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({name:document.getElementById('nombre').value.trim(),email:document.getElementById('correo').value.trim(),start:chosen,consent:true,turnstile:tsToken,intent:intent})})
+  .then(function(r){return r.json().then(function(j){return{ok:r.ok,j:j}})}).then(function(x){
+    if(!x.ok){out.className='msg err';out.textContent=x.j.error||'No se pudo reservar.';btn.disabled=false;if(window.turnstile){window.turnstile.reset();tsToken=null}return}
+    out.className='msg ok';out.innerHTML='';var p=document.createElement('p');p.textContent='¡Listo! Reunión confirmada para '+dayKey(x.j.start)+' a las '+hour(x.j.start)+' (hora de Lima). Te llegó una invitación por correo.';out.appendChild(p);
+    if(x.j.meetLink){var a=document.createElement('a');a.href=x.j.meetLink;a.textContent='Enlace de Google Meet';out.appendChild(a);out.appendChild(document.createTextNode(' · '))}
+    if(x.j.cancelUrl){var c=document.createElement('a');c.href=x.j.cancelUrl;c.textContent='Cancelar reunión';out.appendChild(c)}
+  }).catch(function(){out.className='msg err';out.textContent='Error de conexión. Intenta de nuevo.';btn.disabled=false});
+};
+})();
+</script></body></html>
