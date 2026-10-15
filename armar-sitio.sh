@@ -41,4 +41,17 @@ printf '/*/d/*\n  Cache-Control: public, max-age=31536000, immutable\n/scrolling
 echo "armado en $S ($(du -sh "$S" | cut -f1), $(find "$S" -type f | wc -l) archivos)"
 [ "${1:-}" = "--solo-armar" ] && exit 0
 export CLOUDFLARE_ACCOUNT_ID=f34c339046f4d904e327032ba505c82e CLOUDFLARE_EMAIL=$(cat ~/.config/cloudflare/email) CLOUDFLARE_API_KEY=$(cat ~/.config/cloudflare/api_key)
+# Medición propia (sin cookies): t.js en todas las páginas HTML + Función /t/e (functions/ se despliega junto al sitio)
+cp $C/projects/analizodatos-landing/gemelo/t.js "$S/assets/gemelo/t.js"
+python3 - "$S" <<'PY'
+import sys,pathlib
+tag='<script src="/assets/gemelo/t.js" defer></script>'
+n=0
+for p in pathlib.Path(sys.argv[1]).rglob("*.html"):
+    if "/_next/" in str(p) or "/admin/" in str(p): continue
+    s=p.read_text(errors="ignore")
+    if "gemelo/t.js" in s or "</body>" not in s: continue
+    p.write_text(s.replace("</body>",tag+"</body>",1)); n+=1
+print("t.js inyectado en",n,"páginas")
+PY
 cd ~/clawd/projects/analizodatos-landing && wrangler pages deploy "$S" --project-name analizodatos-landing --branch main --commit-dirty=true 2>&1 | tail -3
