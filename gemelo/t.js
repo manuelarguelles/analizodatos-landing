@@ -41,7 +41,11 @@
     addEventListener('scroll', scroll, { passive: true }); scroll();
     document.addEventListener('visibilitychange', function () { if (document.hidden) { ping(); last = 0; } else { last = Date.now(); } });
     addEventListener('pagehide', ping);
-    setInterval(function () { if (!document.hidden) ping(); }, 15000);
+    // cada 5 s durante los primeros 30 s (visitas cortas: el último ping al salir puede perderse) y luego cada 15 s
+    var t0 = Date.now();
+    (function loop() {
+      setTimeout(function () { if (!document.hidden) ping(); loop(); }, Date.now() - t0 < 30000 ? 5000 : 15000);
+    })();
 
     // clics a otros sitios (incluidos otros subdominios propios): «hipervínculos desde aquí»
     document.addEventListener('click', function (e) {
